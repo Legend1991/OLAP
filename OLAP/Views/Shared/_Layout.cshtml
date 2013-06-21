@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>@ViewBag.Title - OLAP</title>
+        <link href="~/favicon.png" rel="shortcut icon" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width" />
+        @Styles.Render("~/Content/Site.css")
+        @Styles.Render("~/Content/bootstrap.css")
+        @Scripts.Render("~/Scripts/jquery-2.0.2.js")
+        @Scripts.Render("~/Scripts/bootstrap.js")
+    </head>
+    <body>
+        <table id="marker_template" class="marker" style="left:'-50px';top:'-50px'"><tr><td><span id="measureText" class="measure">Marker</span></td></tr></table>
+
+        <div class="navbar navbar-inverse" id="nav">
+  			<div class="navbar-inner">
+				<ul class="nav">
+  					<li class="active">
+    					<a href="#"><img class="navImages" src="@Url.Content("~/Content/Images/gear.png")" >Управление данными</a>
+  					</li>
+  					<li>
+  						<a href="#"><img class="navImages" src="@Url.Content("~/Content/Images/cube.png")" >OLAP анализ</a>
+  					</li>
+				</ul>
+		 	</div>
+		</div>
+
+        <div id="Content">
+            @RenderBody()
+        </div>
+    </body>
+</html>
