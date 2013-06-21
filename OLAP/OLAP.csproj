@@ -129,7 +129,13 @@
     <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\Control.js" />
     <Content Include="Scripts\jquery-2.0.2.js" />
+    <Content Include="Scripts\markers.js" />
+    <Content Include="Scripts\stats.min.js" />
+    <Content Include="Scripts\three.min.js" />
+    <Content Include="Scripts\THREEx.screenshot.js" />
+    <Content Include="Scripts\TrackballControls.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
