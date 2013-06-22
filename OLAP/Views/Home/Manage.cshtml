@@ -1,6 +1,7 @@
 ﻿@{
     ViewBag.Title = "Manage";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    @Scripts.Render("~/Scripts/bootstrap.file-input.js")
 }
 
 <div id="left">
@@ -20,19 +21,23 @@
             <h3 id="myModalLabel">Загрузить источник данных</h3>
         </div>
         <div class="modal-body">
+            <div id="loadDBError" class="alert alert-error hide">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Ошибка!</strong> Все поля должны быть заполнены.
+            </div>
             @using (Html.BeginForm("AddDataBase", "Home", FormMethod.Post, new { enctype = "multipart/form-data", id = "AddWallForm" }))
             {
-                <label>Описание поля</label>
+                <label>Введите имя</label>
                 <input type="text" placeholder="Введите текст…" name="name" id="dataBaseName">
+                <br />
                 <div>
-                    <input type="file" accept=".sdf" class="FieldTextWall" id="FileCheck" name="filePath" />
+                    <input type="file" accept=".sdf" class="FieldTextWall" id="FileCheck" title="Обзор..." name="filePath"/>
                 </div>
-                <button type="submit" class="btn btn-primary" type="button" alt="Add Message" id="AddMessageButton">Default button</button>
             }
         </div>
         <div class="modal-footer">
             <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
-            <button type="submit" class="btn btn-primary">Дальше</button>
+            <button id="loadDB" class="btn btn-primary">Загрузить</button>
         </div>
     </div>
 
@@ -138,4 +143,15 @@
 
 <script>
     $("#ManageNav").addClass("active");
+
+    $("#loadDB").click(function () {
+        var str = $("#dataBaseName").val();
+        str = $.trim(str);
+        if (!str || !$("#FileCheck").val()) {
+            $("#loadDBError").show();
+            $("#dataBaseName").focus();
+        } else {
+            document.forms[0].submit();
+        }
+    });
 </script>
