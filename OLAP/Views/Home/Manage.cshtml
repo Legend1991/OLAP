@@ -20,11 +20,19 @@
             <h3 id="myModalLabel">Загрузить источник данных</h3>
         </div>
         <div class="modal-body">
-            <p>One fine body…</p>
+            @using (Html.BeginForm("AddDataBase", "Home", FormMethod.Post, new { enctype = "multipart/form-data", id = "AddWallForm" }))
+            {
+                <label>Описание поля</label>
+                <input type="text" placeholder="Введите текст…" name="name" id="dataBaseName">
+                <div>
+                    <input type="file" accept=".sdf" class="FieldTextWall" id="FileCheck" name="filePath" />
+                </div>
+                <button type="submit" class="btn btn-primary" type="button" alt="Add Message" id="AddMessageButton">Default button</button>
+            }
         </div>
         <div class="modal-footer">
             <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
-            <button class="btn btn-primary">Дальше</button>
+            <button type="submit" class="btn btn-primary">Дальше</button>
         </div>
     </div>
 
