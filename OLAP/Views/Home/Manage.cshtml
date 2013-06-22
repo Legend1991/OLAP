@@ -10,7 +10,7 @@
             <span class="brand">Источники данных</span>
             <div class="columnButtons">
                 <a href="#addNewDB" role="button" class="btn btn-success" data-toggle="modal">Загрузить...</a>
-                <a href="#" role="button" class="btn btn-danger">Удалить</a>
+                <a href="#" id="delDB" role="button" class="btn btn-danger disabled">Удалить</a>
             </div>
         </div>
     </div>
@@ -41,7 +41,7 @@
         </div>
     </div>
 
-    <select size="2" class="selectData">
+    <select id="SelDB" size="2" class="selectData">
         <option>1</option>
         <option>2</option>
         <option>3</option>
@@ -56,7 +56,7 @@
             <span class="brand">Меры</span>
             <div class="columnButtons">
                 <a href="#addNewMeasure" role="button" class="btn btn-success" data-toggle="modal">Добавить...</a>
-                <a href="#" role="button" class="btn btn-danger">Удалить</a>
+                <a href="#" id="delMeas" role="button" class="btn btn-danger disabled">Удалить</a>
             </div>
         </div>
     </div>
@@ -84,7 +84,7 @@
         </div>
     </div>
 
-     <select size="2" class="selectData">
+     <select id="SelMeas" size="2" class="selectData">
         <option>1</option>
         <option>2</option>
         <option>3</option>
@@ -99,7 +99,7 @@
             <span class="brand">Измерения</span>
             <div class="columnButtons">
                 <a href="#addNewDimension" role="button" class="btn btn-success" data-toggle="modal">Добавить...</a>
-                <a href="#" role="button" class="btn btn-danger">Удалить</a>
+                <a href="#" id="delDim" role="button" class="btn btn-danger disabled">Удалить</a>
             </div>
         </div>
     </div>
@@ -132,7 +132,7 @@
         <a href="#" role="button" class="btn btn-success">Добавить...</a>
         <a href="#" role="button" class="btn btn-danger">Удалить</a>
     </div>*@
-    <select size="2" class="selectData">
+    <select id="SelDim" size="2" class="selectData">
         <option>1</option>
         <option>2</option>
         <option>3</option>
@@ -153,5 +153,18 @@
         } else {
             document.forms[0].submit();
         }
+    });
+
+    $("#SelDB").change(function () {
+        //$("#SelDB option:selected").val();
+            $("#delDB").removeClass("disabled");
+    });
+
+    $("#SelDim").change(function () {
+        $("#delDim").removeClass("disabled");
+    });
+
+    $("#SelMeas").change(function () {
+        $("#delMeas").removeClass("disabled");
     });
 </script>
