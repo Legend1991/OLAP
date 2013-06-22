@@ -125,33 +125,42 @@ canvas {
     left: 15px;
     top: 77px;
     bottom: 15px;
-    width: 30%;
-    background-color: rgb(204,204,204)
+    width: 32%;
+    /*background-color: rgb(204,204,204)*/
 }
 
 #center {
     position: absolute;
     top: 77px;
     bottom: 15px;
-    width: 30%;
-    left: 35%;
-    right: 35%;
+    width: 32%;
+    left: 34%;
+    right: 34%;
     min-height: 500px;
-    background-color: rgb(204,204,204)
+    /*background-color: rgb(204,204,204)*/
 }
 
 #right {
     position: absolute;
     min-height: 500px;
-    width: 30%;
+    width: 32%;
     right: 15px;
     top: 77px;
     bottom: 15px;
-    background-color: rgb(204,204,204)
+    /*background-color: rgb(204,204,204)*/
 }
 
 .selectData {
     width: 100%;
-    min-height: 535px;
+    min-height: 513px;
     bottom: 0px;
+}
+
+.columnLabel {
+    float: left;
+    max-width: 150px;
+}
+
+.columnButtons {
+    float: right;
 }

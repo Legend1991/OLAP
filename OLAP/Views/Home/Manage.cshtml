@@ -4,26 +4,29 @@
 }
 
 <div id="left">
-    <h5>Источник данных</h5>
-
-    <form id="fileupload" action="/Backload/UploadHandler" method="POST" enctype="multipart/form-data" style="position: absolute;">
-    <!-- Redirect browsers with JavaScript disabled to the origin page -->
-    <noscript><input type="hidden" name="redirect" value="/"></noscript>
-    <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
-    <div class="row fileupload-buttonbar">
-        <div class="span7">
-            <!-- The fileinput-button span is used to style the file input field as button -->
-            <span class="btn btn-success fileinput-button">
-                <i class="icon-plus icon-white"></i>
-                <span>Загрузить...</span>
-                <input type="file" name="files[]" multiple>
-            </span>
-            <button type="button" class="btn btn-danger delete">
-                <i class="icon-trash icon-white"></i>
-                <span>Удалить</span>
-            </button>
+        <div class="navbar">
+        <div class="navbar-inner">
+            <span class="brand">Источники данных</span>
+            <div class="columnButtons">
+                <a href="#addNewDB" role="button" class="btn btn-success" data-toggle="modal">Загрузить...</a>
+                <a href="#" role="button" class="btn btn-danger">Удалить</a>
+            </div>
+        </div>
     </div>
-</form>
+ 
+    <div class="modal hide" id="addNewDB" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Загрузить источник данных</h3>
+        </div>
+        <div class="modal-body">
+            <p>One fine body…</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
+            <button class="btn btn-primary">Дальше</button>
+        </div>
+    </div>
 
     <select size="2" class="selectData">
         <option>1</option>
@@ -35,7 +38,39 @@
 </div>
 
 <div id="right">
-     <h5>Меры</h5>
+    <div class="navbar">
+        <div class="navbar-inner">
+            <span class="brand">Меры</span>
+            <div class="columnButtons">
+                <a href="#addNewMeasure" role="button" class="btn btn-success" data-toggle="modal">Добавить...</a>
+                <a href="#" role="button" class="btn btn-danger">Удалить</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal hide" id="addNewMeasure" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Добавить меру</h3>
+        </div>
+        <div class="modal-body">
+            <label>Введите название</label>
+            <input type="text" placeholder="Введите текст…">
+            <label>Выберите поле</label>
+            <select>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+             </select>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
+            <button class="btn btn-primary">Добавить</button>
+        </div>
+    </div>
+
      <select size="2" class="selectData">
         <option>1</option>
         <option>2</option>
@@ -46,8 +81,45 @@
 </div>
 
 <div id="center">
-     <h5>Измерения</h5>
-        <select size="2" class="selectData">
+    <div class="navbar">
+        <div class="navbar-inner">
+            <span class="brand">Измерения</span>
+            <div class="columnButtons">
+                <a href="#addNewDimension" role="button" class="btn btn-success" data-toggle="modal">Добавить...</a>
+                <a href="#" role="button" class="btn btn-danger">Удалить</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal hide" id="addNewDimension" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Добавить измерение</h3>
+        </div>
+        <div class="modal-body">
+            <label>Введите название</label>
+            <input type="text" placeholder="Введите текст…">
+            <label>Выберите таблицу</label>
+            <select>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+             </select>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
+            <button class="btn btn-primary">Добавить</button>
+        </div>
+    </div>
+
+    @*<h5 class="columnLabel">Измерения</h5>
+    <div class="columnButtons">
+        <a href="#" role="button" class="btn btn-success">Добавить...</a>
+        <a href="#" role="button" class="btn btn-danger">Удалить</a>
+    </div>*@
+    <select size="2" class="selectData">
         <option>1</option>
         <option>2</option>
         <option>3</option>
