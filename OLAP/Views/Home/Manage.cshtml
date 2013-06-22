@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "Manage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="left">
+    <h5>Источник данных</h5>
+
+    <form id="fileupload" action="/Backload/UploadHandler" method="POST" enctype="multipart/form-data" style="position: absolute;">
+    <!-- Redirect browsers with JavaScript disabled to the origin page -->
+    <noscript><input type="hidden" name="redirect" value="/"></noscript>
+    <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+    <div class="row fileupload-buttonbar">
+        <div class="span7">
+            <!-- The fileinput-button span is used to style the file input field as button -->
+            <span class="btn btn-success fileinput-button">
+                <i class="icon-plus icon-white"></i>
+                <span>Загрузить...</span>
+                <input type="file" name="files[]" multiple>
+            </span>
+            <button type="button" class="btn btn-danger delete">
+                <i class="icon-trash icon-white"></i>
+                <span>Удалить</span>
+            </button>
+    </div>
+</form>
+
+    <select size="2" class="selectData">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+    </select>
+</div>
+
+<div id="right">
+     <h5>Меры</h5>
+     <select size="2" class="selectData">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+    </select>
+</div>
+
+<div id="center">
+     <h5>Измерения</h5>
+        <select size="2" class="selectData">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+    </select>
+</div>
+
+<script>
+    $("#ManageNav").addClass("active");
+</script>

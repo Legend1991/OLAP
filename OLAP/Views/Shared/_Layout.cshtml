@@ -14,11 +14,11 @@
          <div class="navbar navbar-inverse" id="nav">
   			<div class="navbar-inner">
 				<ul class="nav">
-  					<li class="active">
-    					<a href="#"><img class="navImages" src="@Url.Content("~/Content/Images/gear.png")" >Управление данными</a>
+  					<li id="ManageNav">
+    					<a href="@Url.Action("Manage", "Home") "><img class="navImages" src="@Url.Content("~/Content/Images/gear.png")" >Управление данными</a>
   					</li>
-  					<li>
-  						<a href="#"><img class="navImages" src="@Url.Content("~/Content/Images/cube.png")" >OLAP анализ</a>
+  					<li id="CubeNav">
+  						<a href="@Url.Action("Index", "Home")"><img class="navImages" src="@Url.Content("~/Content/Images/cube.png")" >OLAP анализ</a>
   					</li>
 				</ul>
 		 	</div>
