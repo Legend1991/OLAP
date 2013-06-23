@@ -291,6 +291,8 @@
     <Content Include="Views\Home\Manage.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\Home\ShowDimensions.cshtml" />
+    <Content Include="Views\Home\ShowMeasures.cshtml" />
     <None Include="Web.FileUpload.config" />
     <None Include="Web.FileUpload.xsd">
       <SubType>Designer</SubType>

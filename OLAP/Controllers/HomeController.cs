@@ -21,10 +21,19 @@ namespace OLAP.Controllers
         public ActionResult Manage()
         {
             ViewData["dataBases"] = olapDB.DataBases.ToList();
-            ViewData["dimensions"] = olapDB.Dimensions.ToList();
-            //ViewData["measures"] = olapDB.Measures.ToList();
-
             return View();
+        }
+
+        public ActionResult ShowDimensions(string baseName)
+        {
+            ViewData["dimensions"] = olapDB.Dimensions.Select(d => d.DataBase.Name == baseName).ToList();
+            return PartialView("ShowDimensions");
+        }
+
+        public ActionResult ShowMeasures(string dimName)
+        {
+            ViewData["measuresList"] = olapDB.Measures.Select(m => m.Dimension.Name == dimName).ToList();
+            return PartialView("ShowMeasures");
         }
 
         [HttpPost]
@@ -71,16 +80,17 @@ namespace OLAP.Controllers
         {
             name = name.Trim();
             DataBase db = olapDB.DataBases.Single(b => b.Name == baseName);
-            Dimension d = new Dimension
+            Dimension dim = new Dimension
             {
                 DataBaseId = db.Id,
                 TableName = tableName,
                 Name = name,
             };
 
-            olapDB.Dimensions.Add(d);
+            olapDB.Dimensions.Add(dim);
             olapDB.SaveChanges();
-            return RedirectToAction("Manage");
+            ViewData["dimensions"] = olapDB.Dimensions.Select(d => d.DataBase.Name == baseName).ToList();
+            return PartialView("ShowDimensions");
         }
 
         [HttpGet]
@@ -89,7 +99,7 @@ namespace OLAP.Controllers
             Dimension dim = olapDB.Dimensions.Single(d => d.Name == name);
             olapDB.Dimensions.Remove(dim);
             olapDB.SaveChanges();
-            return RedirectToAction("Manage");
+            return PartialView("ShowDimensions");
         }
 
         [HttpPost]
@@ -97,7 +107,7 @@ namespace OLAP.Controllers
         {
             name = name.Trim();
             Dimension dim = olapDB.Dimensions.Single(d => d.Name == dimName);
-            Measure m = new Measure
+            Measure meas = new Measure
             {
                 DimensionsId = dim.Id,
                 ColumnName = columnName,
@@ -105,9 +115,10 @@ namespace OLAP.Controllers
                 Priority = olapDB.Measures.ToList().Last().Priority + 1,
             };
 
-            olapDB.Measures.Add(m);
+            olapDB.Measures.Add(meas);
             olapDB.SaveChanges();
-            return RedirectToAction("Manage");
+            ViewData["measuresList"] = olapDB.Measures.Select(m => m.Dimension.Name == dimName).ToList();
+            return PartialView("ShowMeasures");
         }
 
         [HttpGet]
@@ -116,7 +127,7 @@ namespace OLAP.Controllers
             Measure meas= olapDB.Measures.Single(m => m.Name == name);
             olapDB.Measures.Remove(meas);
             olapDB.SaveChanges();
-            return RedirectToAction("Manage");
+            return PartialView("ShowMeasures");
         }
     }
 }

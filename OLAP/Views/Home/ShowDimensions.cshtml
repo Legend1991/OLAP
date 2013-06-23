@@ -18,11 +18,6 @@
             <input type="text" placeholder="Введите текст…">
             <label>Выберите таблицу</label>
             <select  class="SelDim">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
              </select>
         </div>
         <div class="modal-footer">
@@ -37,9 +32,10 @@
         <a href="#" role="button" class="btn btn-danger">Удалить</a>
     </div>*@
     <select id="SelDim" size="2" class="selectData SelDim">
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-        <option>5</option>
+        @if (ViewData["dimensions"] != null){
+        foreach (var dim in (List<OLAP.Models.Dimension>)ViewData["dimensions"])
+        {
+            <option>@dim.Name</option>
+        }
+        }
     </select>

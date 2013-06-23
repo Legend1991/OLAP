@@ -1,5 +1,37 @@
-﻿@{
-    ViewBag.Title = "ShowMeasures";
-}
+﻿    <div class="navbar">
+        <div class="navbar-inner">
+            <span class="brand">Меры</span>
+            <div class="columnButtons">
+                <a href="#addNewMeasure" role="button" class="btn btn-success" data-toggle="modal">Добавить...</a>
+                <a href="#" id="delMeas" role="button" class="btn btn-danger disabled">Удалить</a>
+            </div>
+        </div>
+    </div>
 
-<h2>ShowMeasures</h2>
+    <div class="modal hide" id="addNewMeasure" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Добавить меру</h3>
+        </div>
+        <div class="modal-body">
+            <label>Введите название</label>
+            <input type="text" placeholder="Введите текст…">
+            <label>Выберите поле</label>
+            <select class="SelMeas">
+             </select>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
+            <button class="btn btn-primary">Добавить</button>
+        </div>
+    </div>
+
+     <select size="2" class="selectData SelMeas">
+        @if (ViewData["measuresList"] != null)
+         {
+        foreach (var meas in (List<OLAP.Models.Measure>)ViewData["measuresList"])
+        {
+            <option>@meas.Name</option>
+        }
+        }
+    </select>
