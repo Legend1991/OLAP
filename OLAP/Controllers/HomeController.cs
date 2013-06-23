@@ -5,13 +5,13 @@ using System.Web;
 using System.Web.Mvc;
 using System.IO;
 using System.Text;
+using OLAP.Models;
 
 namespace OLAP.Controllers
 {
     public class HomeController : Controller
     {
-        //
-        // GET: /Home/
+        OLAPEntities olapDB = new OLAPEntities();
 
         public ActionResult Index()
         {
