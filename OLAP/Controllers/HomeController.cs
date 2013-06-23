@@ -20,7 +20,9 @@ namespace OLAP.Controllers
 
         public ActionResult Manage()
         {
-            return View();
+            var dataBases = olapDB.DataBases.ToList();
+
+            return View(dataBases);
         }
 
         [HttpPost]
@@ -49,11 +51,15 @@ namespace OLAP.Controllers
         [HttpGet]
         public ActionResult DeleteDataBase(string name)
         {
-            var filePath = Path.Combine(Server.MapPath("~/Files"), name);
+            DataBase db = olapDB.DataBases.Single(d => d.Name == name);
+            var filePath = Path.Combine(Server.MapPath("~/Files"), db.FileName);
 
             if (System.IO.File.Exists(filePath))
             {
                 System.IO.File.Delete(filePath);
+
+                olapDB.DataBases.Remove(db);
+                olapDB.SaveChanges();
             }
             return RedirectToAction("Manage");
         }

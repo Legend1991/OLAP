@@ -4,6 +4,8 @@
     @Scripts.Render("~/Scripts/bootstrap.file-input.js")
 }
 
+@model IEnumerable<OLAP.Models.DataBase>
+
 <div id="left">
         <div class="navbar">
         <div class="navbar-inner">
@@ -42,11 +44,10 @@
     </div>
 
     <select id="SelDB" size="2" class="selectData">
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-        <option>5</option>
+        @foreach (var db in Model)
+        {
+            <option>@db.Name</option>
+        }
     </select>
 </div>
 
@@ -166,5 +167,15 @@
 
     $("#SelMeas").change(function () {
         $("#delMeas").removeClass("disabled");
+    });
+
+    $("#delDB").click(function () {
+        $.get("@Url.Action("DeleteDataBase", "Home")", { name: $("#SelDB option:selected").val() });
+        $("#SelDB option:selected").remove();
+        if ($("#SelDB").children().length == 0) {
+            $("#delDB").addClass("disabled");
+            $("#SelDim").children().remove();
+            $("#SelMeas").children().remove();
+        }
     });
 </script>
