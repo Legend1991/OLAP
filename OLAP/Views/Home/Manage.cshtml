@@ -4,8 +4,6 @@
     @Scripts.Render("~/Scripts/bootstrap.file-input.js")
 }
 
-@model IEnumerable<OLAP.Models.DataBase>
-
 <div id="left">
         <div class="navbar">
         <div class="navbar-inner">
@@ -44,7 +42,7 @@
     </div>
 
     <select id="SelDB" size="2" class="selectData">
-        @foreach (var db in Model)
+        @foreach (var db in (List<OLAP.Models.DataBase>)ViewData["dataBases"])
         {
             <option>@db.Name</option>
         }
@@ -71,7 +69,7 @@
             <label>Введите название</label>
             <input type="text" placeholder="Введите текст…">
             <label>Выберите поле</label>
-            <select>
+            <select class="SelMeas">
                 <option>1</option>
                 <option>2</option>
                 <option>3</option>
@@ -85,7 +83,7 @@
         </div>
     </div>
 
-     <select id="SelMeas" size="2" class="selectData">
+     <select size="2" class="selectData SelMeas">
         <option>1</option>
         <option>2</option>
         <option>3</option>
@@ -114,7 +112,7 @@
             <label>Введите название</label>
             <input type="text" placeholder="Введите текст…">
             <label>Выберите таблицу</label>
-            <select>
+            <select  class="SelDim">
                 <option>1</option>
                 <option>2</option>
                 <option>3</option>
@@ -133,7 +131,7 @@
         <a href="#" role="button" class="btn btn-success">Добавить...</a>
         <a href="#" role="button" class="btn btn-danger">Удалить</a>
     </div>*@
-    <select id="SelDim" size="2" class="selectData">
+    <select id="SelDim" size="2" class="selectData SelDim">
         <option>1</option>
         <option>2</option>
         <option>3</option>
@@ -153,26 +151,43 @@
             $("#dataBaseName").focus();
         } else {
             document.forms[0].submit();
+            $("#dataBaseName").val() = "";
         }
     });
 
     $("#SelDB").change(function () {
         //$("#SelDB option:selected").val();
+        if ($("#SelDB").children().length == 0) {
+            $("#delDB").addClass("disabled");
+        }
+        else {
             $("#delDB").removeClass("disabled");
+        }
     });
 
     $("#SelDim").change(function () {
-        $("#delDim").removeClass("disabled");
+        if ($("#SelDim").children().length == 0) {
+            $("#delDim").addClass("disabled");
+        }
+        else {
+            $("#delDim").removeClass("disabled");
+        }
     });
 
     $("#SelMeas").change(function () {
-        $("#delMeas").removeClass("disabled");
+        if ($("#SelMeas").children().length == 0) {
+            $("#delMeas").addClass("disabled");
+        }
+        else {
+            $("#delMeas").removeClass("disabled");
+        }
     });
 
     $("#delDB").click(function () {
         $.get("@Url.Action("DeleteDataBase", "Home")", { name: $("#SelDB option:selected").val() });
         $("#SelDB option:selected").remove();
-        if ($("#SelDB").children().length == 0) {
+
+        if ($("#SelDB option:selected") != null) {
             $("#delDB").addClass("disabled");
             $("#SelDim").children().remove();
             $("#SelMeas").children().remove();

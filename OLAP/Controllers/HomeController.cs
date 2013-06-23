@@ -20,9 +20,11 @@ namespace OLAP.Controllers
 
         public ActionResult Manage()
         {
-            var dataBases = olapDB.DataBases.ToList();
+            ViewData["dataBases"] = olapDB.DataBases.ToList();
+            ViewData["dimensions"] = olapDB.Dimensions.ToList();
+            //ViewData["measures"] = olapDB.Measures.ToList();
 
-            return View(dataBases);
+            return View();
         }
 
         [HttpPost]
@@ -61,6 +63,59 @@ namespace OLAP.Controllers
                 olapDB.DataBases.Remove(db);
                 olapDB.SaveChanges();
             }
+            return RedirectToAction("Manage");
+        }
+
+        [HttpPost]
+        public ActionResult AddDimension(string name, string tableName, string baseName)
+        {
+            name = name.Trim();
+            DataBase db = olapDB.DataBases.Single(b => b.Name == baseName);
+            Dimension d = new Dimension
+            {
+                DataBaseId = db.Id,
+                TableName = tableName,
+                Name = name,
+            };
+
+            olapDB.Dimensions.Add(d);
+            olapDB.SaveChanges();
+            return RedirectToAction("Manage");
+        }
+
+        [HttpGet]
+        public ActionResult DeleteDimension(string name)
+        {
+            Dimension dim = olapDB.Dimensions.Single(d => d.Name == name);
+            olapDB.Dimensions.Remove(dim);
+            olapDB.SaveChanges();
+            return RedirectToAction("Manage");
+        }
+
+        [HttpPost]
+        public ActionResult AddMeasure(string name, string columnName, string dimName)
+        {
+            name = name.Trim();
+            Dimension dim = olapDB.Dimensions.Single(d => d.Name == dimName);
+            Measure m = new Measure
+            {
+                DimensionsId = dim.Id,
+                ColumnName = columnName,
+                Name = name,
+                Priority = olapDB.Measures.ToList().Last().Priority + 1,
+            };
+
+            olapDB.Measures.Add(m);
+            olapDB.SaveChanges();
+            return RedirectToAction("Manage");
+        }
+
+        [HttpGet]
+        public ActionResult DeleteAddMeasure(string name)
+        {
+            Measure meas= olapDB.Measures.Single(m => m.Name == name);
+            olapDB.Measures.Remove(meas);
+            olapDB.SaveChanges();
             return RedirectToAction("Manage");
         }
     }
