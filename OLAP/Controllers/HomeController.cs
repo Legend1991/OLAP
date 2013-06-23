@@ -33,6 +33,15 @@ namespace OLAP.Controllers
                 var serverName = new StringBuilder(Guid.NewGuid().ToString());
                 serverName.Append(filePath.FileName, filePath.FileName.Length - 4, 4);
                 filePath.SaveAs(Path.Combine(path, serverName.ToString()));
+
+                DataBase db = new DataBase
+                {
+                    FileName = serverName.ToString(),
+                    Name = name,
+                };
+
+                olapDB.DataBases.Add(db);
+                olapDB.SaveChanges();
             }
             return RedirectToAction("Manage");
         }
