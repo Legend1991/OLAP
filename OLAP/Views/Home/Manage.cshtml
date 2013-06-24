@@ -89,7 +89,7 @@
             $("#delDB").addClass("disabled");
             $("#addDim").addClass("disabled");
             $("#addMeas").addClass("disabled");
-            $("#addNewFact").addClass("disabled");
+            $("#addFact").addClass("disabled");
         }
         else {
             $("#newDimBaseName").val($("#SelDB option:selected").val());
@@ -97,7 +97,7 @@
             $("#newFactBaseName").val($("#SelDB option:selected").val());
             $("#delDB").removeClass("disabled");
             $("#addDim").removeClass("disabled");
-            $("#addNewFact").removeClass("disabled");
+            $("#addFact").removeClass("disabled");
         }
     });
 

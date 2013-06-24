@@ -112,6 +112,45 @@ namespace OLAP.Controllers
             return Json(dims);
         }
 
+        [AllowAnonymous]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult ShowFactsRows(string baseName, string tableName)
+        {
+            List<FactJson> facts = new List<FactJson>();
+
+            DataBase db = olapDB.DataBases.Single(d => d.Name == baseName);
+
+            SqlCeConnection myConnection = new SqlCeConnection();
+            DataSet ds;
+            String selColumnsSQL = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='" + tableName + "'";
+            string dataSource = Path.Combine(Server.MapPath("~/Files"), db.FileName);
+            myConnection.ConnectionString = @"Data Source=" + dataSource + ";Persist Security Info=False;";
+            myConnection.Open();
+            using (SqlCeCommand comm = new SqlCeCommand(selColumnsSQL, myConnection))
+            {
+                using (SqlCeDataAdapter da = new SqlCeDataAdapter(comm))
+                {
+                    ds = new DataSet();
+
+                    try
+                    {
+                        da.Fill(ds);
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                    finally
+                    {
+                        myConnection.Close();
+                    }
+                }
+            }
+
+            addFactsRows(facts, ds);
+
+            return Json(facts);
+        }
+
         [HttpPost]
         public ActionResult AddDataBase(HttpPostedFileBase filePath, string name)
         {
@@ -280,6 +319,14 @@ namespace OLAP.Controllers
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 meas.Add(new MeasureJson { Name = "", ColumnName = (string)row[0] });
+            }
+        }
+
+        private void addFactsRows(List<FactJson> meas, DataSet ds)
+        {
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                meas.Add(new FactJson { Name = "", RowName = (string)row[0], TableName="" });
             }
         }
     }
