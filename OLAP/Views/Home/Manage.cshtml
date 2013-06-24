@@ -89,12 +89,15 @@
             $("#delDB").addClass("disabled");
             $("#addDim").addClass("disabled");
             $("#addMeas").addClass("disabled");
+            $("#addNewFact").addClass("disabled");
         }
         else {
             $("#newDimBaseName").val($("#SelDB option:selected").val());
             $("#newMeasBaseName").val($("#SelDB option:selected").val());
+            $("#newFactBaseName").val($("#SelDB option:selected").val());
             $("#delDB").removeClass("disabled");
             $("#addDim").removeClass("disabled");
+            $("#addNewFact").removeClass("disabled");
         }
     });
 
@@ -124,6 +127,16 @@
         }
     }
 
+    function setFacts(data) {
+        $("#newFactSelTable").children().remove();
+        var facts = JSON.parse(data.responseText);
+        for (var f in facts) {
+            if (facts[f].Name !== "") {
+                $("#SelFact").append("<option>" + facts[f].Name + "</option>");
+            }
+        }
+    }
+
     $("#SelDB option").click(function () {
         $("#addMeas").addClass("disabled");
         $("#SelMeas").children().remove();
@@ -140,6 +153,15 @@
             data: { baseName: $("#SelDB option:selected").val() },
             success: setDimensions,
             error: setDimensions
+        });
+
+        $.ajax({
+            type: "POST",
+            dataType: 'jsonp',
+            url: "/Home/ShowFacts",
+            data: { baseName: $("#SelDB option:selected").val() },
+            success: setFacts,
+            error: setFacts
         });
     });
 </script>

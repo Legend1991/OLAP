@@ -27,7 +27,7 @@
             <select id="newFactSelTable" class="SelFact" name="tableName">
              </select>
                 <label>Выберите поле</label>
-            <select id="newFactSelRow" class="SelFact" name="rowName">
+            <select id="newFactSelRow" class="SelFact disabled" name="rowName">
              </select>
             }
         </div>
@@ -37,7 +37,7 @@
         </div>
     </div>
 
-     <select id="FactMeas" size="2" class="selectData SelFact">
+     <select id="SelFact" size="2" class="selectData SelFact">
         @if (ViewData["factsList"] != null)
         {
             foreach (var meas in (List<OLAP.Models.MeasureJson>)ViewData["factsList"])
@@ -46,3 +46,29 @@
             }
         }
     </select>
+
+<script>
+    function setFactsRows(data) {
+        $("#newFactSelRow").children().remove();
+        var rows = JSON.parse(data.responseText);
+        for (var r in rows) {
+            if (rows[r].RowName !== "") {
+                $("#newFactSelRow").append("<option>" + rows[r].RowName + "</option>");
+            }
+        }
+    }
+
+    $("#newFactSelTable").click(function () {
+        if ($("#newFactSelRow").children().length == 0) {
+            $("#newFactSelRow").addClass("disabled");
+        }
+        $.ajax({
+            type: "POST",
+            dataType: 'jsonp',
+            url: "/Home/ShowFactsRows",
+            data: { tableName: $("#newFactSelTable option:selected").val(), baseName: $("#newDimBaseName").val() },
+            success: setFactsRows,
+            error: setFactsRows
+        });
+    });
+</script>
