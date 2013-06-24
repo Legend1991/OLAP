@@ -6,6 +6,7 @@
 }
 
 <div id="left">
+<div id="left1">
         <div class="navbar">
         <div class="navbar-inner">
             <span id="DBSelLabel">Базы данных</span>
@@ -52,16 +53,19 @@
     </select>
 </div>
 
-    <div id="right1">
-    @Html.Partial("ShowMeasures")
-    </div>
+<div id="left2">
+    @Html.Partial("ShowDimensions")
+</div>
+</div>
 
-    <div id="right2">
+<div id="right">
+        <div id="right2">
         @Html.Partial("ShowFacts")
     </div>
 
-<div id="center">
-    @Html.Partial("ShowDimensions")
+    <div id="right1">
+    @Html.Partial("ShowMeasures")
+    </div>
 </div>
 
 <script>
