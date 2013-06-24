@@ -114,7 +114,7 @@ namespace OLAP.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddMeasure(string name, string columnName, string dimName)
+        public ActionResult AddMeasure(string name, string columnName, string dimName, string baseName)
         {
             name = name.Trim();
             Dimension dim = olapDB.Dimensions.Single(d => d.Name == dimName);
@@ -129,12 +129,13 @@ namespace OLAP.Controllers
             olapDB.Measures.Add(meas);
             olapDB.SaveChanges();
             ViewData["dataBases"] = olapDB.DataBases.ToList();
+            ViewData["dimensions"] = SelectDimensions(olapDB.Dimensions.ToList(), baseName);
             ViewData["measuresList"] = SelectMeasures(olapDB.Measures.ToList(), dimName);
             return PartialView("Manage");
         }
 
         [HttpGet]
-        public ActionResult DeleteAddMeasure(string name)
+        public ActionResult DeleteMeasure(string name)
         {
             Measure meas= olapDB.Measures.Single(m => m.Name == name);
             olapDB.Measures.Remove(meas);

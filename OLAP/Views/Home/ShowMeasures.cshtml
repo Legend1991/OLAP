@@ -21,6 +21,7 @@
             @using (Html.BeginForm("AddMeasure", "Home", FormMethod.Post, new { enctype = "multipart/form-data", id = "newMeasForm" }))
             {
             <input type="text" id="newMeasDimName"  style="position: absolute; visibility: hidden" name="dimName" />
+            <input type="text" id="newMeasBaseName"  style="position: absolute; visibility: hidden" name="baseName" />
             <label>Введите название</label>
             <input type="text" id="newMeasName" placeholder="Введите текст…" name="name">
             <label>Выберите поле</label>
@@ -37,10 +38,10 @@
      <select id="SelMeas" size="2" class="selectData SelMeas">
         @if (ViewData["measuresList"] != null)
         {
-            foreach (var meas in (List<OLAP.Models.Measure>)ViewData["measuresList"])
+            foreach (var meas in (List<OLAP.Models.MeasureJson>)ViewData["measuresList"])
             {
-            <option>@meas.Name</option>
-        }
+                <option>@meas.Name</option>
+            }
         }
     </select>
 
@@ -63,6 +64,15 @@
         }
         else {
             $("#delMeas").removeClass("disabled");
+        }
+    });
+
+    $("#delMeas").click(function () {
+        $.get("@Url.Action("DeleteMeasure", "Home")", { name: $("#SelMeas option:selected").val() });
+        $("#SelMeas option:selected").remove();
+
+        if ($("#SelMeas option:selected") != null) {
+            $("#delMeas").addClass("disabled");
         }
     });
 </script>
