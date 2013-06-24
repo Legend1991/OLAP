@@ -17,6 +17,14 @@ function attachMarkerToCube(measureName, currCube, dim) {
 	marker.measureName = measureName;
 	marker.childNodes[0].childNodes[0].childNodes[0].textContent = measureName;
 
+	if (dim == 0) {
+	    marker.shiftGroup = currCube.position.x;
+	} else if (dim == 1) {
+	    marker.shiftGroup = currCube.position.y;
+	} else if (dim == 2) {
+	    marker.shiftGroup = currCube.position.z;
+	}
+
 	marker.currCube = currCube;
     currCube.marker = marker;
     marker.dim = dim;
@@ -63,19 +71,24 @@ function attachMarkerToCube(measureName, currCube, dim) {
 		if( this.selected || this.hover )
 			zIndex = 10000;
 
-		this.setPosition(screenPos.x, screenPos.y, zIndex);
+		if (this.dim == 0) {
+		    this.setPosition(screenPos.x, screenPos.y - 50, zIndex);
+		} else if (this.dim  == 1) {
+		    this.setPosition(screenPos.x - 75, screenPos.y - 10, zIndex);
+		} else if (this.dim == 2) {
+		    this.setPosition(screenPos.x + 10, screenPos.y + 15, zIndex);
+		}
 
 	    //var debug = document.getElementById("debug");
 	    //debug.textContent = "X: " + screenPos.x + " Y: " + screenPos.y + " Z: " + screenPos.z;
 	}
 
-	var markerSelect = function(e){
-		/*if (blockIsMove == true && checkMovingGroup(DIMY, this.dim, this.currCube.position.x, this.currCube.position.y, this.currCube.position.z) == false) {
-			            return;
-			        }
-			        shift(DIMY, this.dim);
-			        blockIsMove = !blockIsMove;*/
-			        $('.dropdown-toggle').dropdown();
+	var markerSelect = function (e) {
+	    if (blockIsMove == true && checkMovingGroup(this.dim, this.shiftGroup, this.currCube.position.x, this.currCube.position.y, this.currCube.position.z) == false) {
+			return;
+	    }
+	    shift(this.dim, this.shiftGroup);
+		blockIsMove = !blockIsMove;
 	};
 
 	marker.addEventListener('click', markerSelect, true);

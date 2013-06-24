@@ -7,6 +7,7 @@
     @Scripts.Render("~/Scripts/TrackballControls.js")
     @Scripts.Render("~/Scripts/THREEx.screenshot.js")
     @Scripts.Render("~/Scripts/markers.js")
+    @Scripts.Render("~/Scripts/SimpleData.js")
 }
 
 
@@ -15,39 +16,49 @@
 <div id="sideBar">
 	<div style="margin-top: 0px;"><h5>База данных</h5></div>
 	<select id="DBSel">
-        @if (ViewData["dataBases"] != null){
-        foreach (var db in (List<OLAP.Models.DataBase>)ViewData["dataBases"])
-        {
-            <option>@db.Name</option>
-        }
-        }
+            <option>Тест БД</option>
 	</select>
 
 	<div id="Dims">
 		<div><h5>Измерение X</h5></div>
-		<select>
-  			<option>Time_Dim</option>
-  			<option>Region_Dim</option>
-  			<option>Category_Dim</option>
+		<select id="xDimSel">
+  			<option>Время</option>
+  			<option>Расположение</option>
+  			<option>Категория</option>
+            <option>Работник</option>
 		</select>
 		<div><h5>Измерение Y</h5></div>
-		<select>
-			<option>Region_Dim</option>
-  			<option>Time_Dim</option>
-  			<option>Category_Dim</option>
+		<select id="yDimSel">
+			<option>Время</option>
+  			<option>Расположение</option>
+  			<option>Категория</option>
+            <option>Работник</option>
 		</select>
 		<div><h5>Измерение Z</h5></div>
-		<select>
-			<option>Category_Dim</option>
-  			<option>Time_Dim</option>
-  			<option>Region_Dim</option>
+		<select id="zDimSel">
+			<option>Время</option>
+  			<option>Расположение</option>
+  			<option>Категория</option>
+            <option>Работник</option>
 		</select>
 	</div>
+    <div id="Facts">
+        <div><h5>Анализируемый факт</h5></div>
+        <select id="factsSel">
+            <option>Доход</option>
+        </select>
+    </div>
     <button id="createCube" class="btn btn-large btn-success" type="button">Построить куб</button>
 </div>
 
 <div id="visualizationBorder">
     <div  id="visualization">
+        <div id="info">
+            <div><span id="measX">Город:</span></div>
+            <div><span id="measY">Год:</span></div>
+            <div><span id="measZ">Категория:</span></div>
+            <div><span id="fact">Доход:</span></div>
+        </div>
   		<ul id="contextMenu" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
     	    <li><a tabindex="-1" href="#">Действие</a></li>
     		<li><a tabindex="-1" href="#">Другое действие</a></li>
@@ -76,6 +87,13 @@
 			var blockIsMove = false;
 			var shiftGroup;
 			var face;
+			var currX;
+			var currY;
+			var currZ;
+			var currXLabel;
+			var currYLabel;
+			var currZLabel;
+            var currFact
 
 			renderer = new THREE.WebGLRenderer({ preserveDrawingBuffer: true, antialias: true });
 			renderer.setSize(WIDTH, HEIGHT);
@@ -96,11 +114,18 @@
 			//THREEx.Screenshot.bindKey(renderer);
 
 /////////////////// Objects
-
 			var cubesX;
-			function makeCube(countX, countY, countZ) {
+			function makeCube(countX, countY, countZ, labelsX, labelsY, labelsZ, facts) {
+			    //clearScene();
+			    currX = countX;
+			    currY = countY;
+			    currZ = countZ;
+			    currXLabel = labelsX;
+			    currYLabel = labelsY;
+			    currZLabel = labelsZ;
+			    currFact = facts;
 			    cubesX = Array(countX);
-			    for (var xi = 0; xi < countY; xi++) {
+			    for (var xi = 0; xi < countX; xi++) {
 			        var cubesY = Array(countY);
 			        for (var yi = 0; yi < countY; yi++) {
 			            var cubesZ = Array(countZ);
@@ -111,12 +136,15 @@
 			                cube.position.x = xi;
 			                cube.position.y = yi;
 			                cube.position.z = zi;
+			                cube.x = xi;
+			                cube.y = yi;
+			                cube.z = zi;
 			                cubesZ[zi] = cube;
 			                scene.add(cube);
 			                var cubeMesh = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 1), new THREE.MeshLambertMaterial({ wireframe: true, color: 0x000000 }));
 			                THREE.SceneUtils.attach(cubeMesh, scene, cube);
 
-			                createMarkers(cube);
+			                createMarkers(cube, countX, countY, countZ, labelsX, labelsY, labelsZ);
 			            }
 			            cubesY[yi] = cubesZ;
 			        }
@@ -125,15 +153,15 @@
 			}
 
 /////////////////// Create markers
-			function createMarkers(currCube) {
-			    if (currCube.position.x == 4 && currCube.position.z == 0) {
-			        attachMarkerToCube("Kharkov", currCube, DIMY);
+			function createMarkers(currCube, countX, countY, countZ, labelsX, labelsY, labelsZ) {
+			    if (currCube.position.x == countX - 1 && currCube.position.z == 0) {
+			        attachMarkerToCube(labelsY[currCube.position.y], currCube, DIMY);
 			    }
-			    else if (currCube.position.y == 4 && currCube.position.z == 4) {
-			        attachMarkerToCube("Kharkov", currCube, DIMX);
+			    else if ((currCube.position.y == (countY - 1)) && (currCube.position.z == (countZ - 1))) {
+			        attachMarkerToCube(labelsX[currCube.position.x], currCube, DIMX);
 			    }
 			    else if (currCube.position.x == 0 && currCube.position.y == 0) {
-			        attachMarkerToCube("Kharkov", currCube, DIMZ);
+			        attachMarkerToCube(labelsZ[currCube.position.z], currCube, DIMZ);
 			    }
 			}
 
@@ -141,7 +169,7 @@
 			function clearScene() {
 			    for (var i = scene.children.length - 1; i >= 0 ; i--) {
 			        var obj = scene.children[i];
-			        if (obj !== plane && obj !== camera) {
+			        if (obj !== camera) {
 			            scene.remove(obj);
 			        }
 			    }
@@ -176,8 +204,6 @@
 			    var intersects = raycaster.intersectObjects(scene.children);
 
 			    if (intersects.length > 0) {
-			        //var debug = document.getElementById('debug');
-			        //debug.textContent = "OK";
 			        if (INTERSECTED != intersects[0].object) {
 
 			            if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
@@ -185,27 +211,12 @@
 			            INTERSECTED = intersects[0].object;
 			            INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
 			            INTERSECTED.material.emissive.setHex(0xff0000);
-			            //if (INTERSECTED.marker) {
-			            //    INTERSECTED.marker.setAttribute('style', 'background-color: rgba(255,140,0,.87); color:	#000000;');
-			            //}
-			            //face = intersects[0].face;
-			            //face.currentHex = face.material.emissive.getHex();
-			            //face.material.emissive.setHex(0x000000);
-			            var debug = document.getElementById("debug");
-			            debug.textContent = "X: " + INTERSECTED.position.x + " Y: " + INTERSECTED.position.y + " Z: " + INTERSECTED.position.z;
 			        }
 
 			    } else {
 			        if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
-			        //if (face) face.material.emissive.setHex(face.currentHex);
-			        //if (INTERSECTED.marker != null) {
-			        //    INTERSECTED.marker.setAttribute('style', 'background-color: rgba(0,0,0,.87); color:	#ffffff;');
-			        //}
 
 			        INTERSECTED = null;
-			        //face = null;
-			        //var debug = document.getElementById("debug");
-			        //debug.textContent = "X:  , Y:  , Z:  ";
 			    }
 		    }
 
@@ -216,6 +227,12 @@
 
 			    mouse.x = ((event.clientX - 254) / WIDTH) * 2 - 1;
 			    mouse.y = -((event.clientY - 81) / HEIGHT) * 2 + 1;
+			    if (INTERSECTED != null) {
+			        document.getElementById("measX").textContent = $("#xDimSel option:selected").val() + ": " + currXLabel[INTERSECTED.x];
+			        document.getElementById("measY").textContent = $("#yDimSel option:selected").val() + ": " + currYLabel[INTERSECTED.y];
+			        document.getElementById("measZ").textContent = $("#zDimSel option:selected").val() + ": " + currZLabel[INTERSECTED.z];
+			        document.getElementById("fact").textContent = $("#factsSel option:selected").val() + ": " + currFact[INTERSECTED.x][INTERSECTED.y][INTERSECTED.z];
+			    }
 
 			    //var debug = document.getElementById("debug");
 			    //debug.textContent = "X:  " + camera.position.x + " Y:  "+ camera.position.y + " Z: " + camera.position.z;
@@ -225,12 +242,6 @@
 
 			function onDocumentMouseUp(event) {
 			    if (INTERSECTED != null) {
-			        if (blockIsMove == true && checkMovingGroup(DIMY, shiftGroup, INTERSECTED.position.x, INTERSECTED.position.y, INTERSECTED.position.z) == false) {
-			            return;
-			        }
-			        shiftGroup = INTERSECTED.position.y;
-			        shift(DIMY, shiftGroup);
-			        blockIsMove = !blockIsMove;
 			        $('.dropdown-toggle').dropdown();
 			    }
 			}
@@ -240,8 +251,8 @@
 			    if (blockIsMove == true) {
 			        moveDist = -moveDist;
 			    }
-			    for (var xi = 0; xi < 5; xi++) {
-			        for (var yi = 0; yi < 5; yi++) {
+			    for (var xi = 0; xi < currX; xi++) {
+			        for (var yi = 0; yi < currZ; yi++) {
 			            switch (dim) {
 			                case 0:
 			                    cubesX[shiftGroup][xi][yi].position.z -= moveDist
@@ -315,6 +326,28 @@
 				}		    	
 
 			};
-			makeCube(5, 5, 5);
+            
+			makeCube(x1, y1, z1, YearData, CountryData, Category, cube1);
 			render();
+
+
+//////////////////// User interface script
+
+			function checkButton() {
+			    if (!$("#DBSel option:selected").val() ||
+                    !$("#xDimSel option:selected").val() ||
+                    !$("#yDimSel option:selected").val() ||
+                    !$("#zDimSel option:selected").val() ||
+                    !$("#DBSel option:selected").val()) {
+			        $("#factsSel").addClass("disabled");
+			    }
+			    else {
+			        $("#createCube").removeClass("disabled");
+			    }
+			}
+
+			$("#DBSel option").click(function () {
+			    checkButton();
+			    $("#DBSel option:selected").val()
+			});
 </script>

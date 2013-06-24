@@ -95,6 +95,10 @@ canvas {
     margin-bottom: 40px;
 }
 
+#Facts {
+    margin-bottom: 40px;
+}
+
 #createCube {
     min-width: 220px;
 }
@@ -216,4 +220,15 @@ canvas {
     margin-left: -15px;
     margin-top: 10px;
     position: absolute;
+}
+
+#info {
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    width: 235px;
+    height: 85px;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: rgba(246, 191, 14, 0.35);
 }
