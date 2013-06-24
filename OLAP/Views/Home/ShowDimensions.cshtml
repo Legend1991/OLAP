@@ -2,7 +2,7 @@
         <div class="navbar-inner">
             <span class="brand">Измерения</span>
             <div class="columnButtons">
-                <a href="#addNewDimension" role="button" class="btn btn-success" data-toggle="modal">Добавить...</a>
+                <a href="#addNewDimension" id="addDim" role="button" class="btn btn-success disabled" data-toggle="modal">Добавить...</a>
                 <a href="#" id="delDim" role="button" class="btn btn-danger disabled">Удалить</a>
             </div>
         </div>
@@ -14,15 +14,24 @@
             <h3 id="myModalLabel">Добавить измерение</h3>
         </div>
         <div class="modal-body">
+             <div id="newDimError" class="alert alert-error hide">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Ошибка!</strong> Все поля должны быть заполнены.
+            </div>
+            @using (Html.BeginForm("AddDimension", "Home", FormMethod.Post, new { enctype = "multipart/form-data", id = "newDimForm" }))
+            {
+            <input type="text" id="newDimBaseName" style="position: absolute; visibility: hidden"  name="baseName" />
             <label>Введите название</label>
-            <input type="text" placeholder="Введите текст…">
+            <input type="text" id="newDimName" placeholder="Введите текст…" name="name">
             <label>Выберите таблицу</label>
-            <select  class="SelDim">
+            <select id="newDimSel"  class="SelDim" name="tableName">
+                <option>dsfasdf</option>
              </select>
+            }
         </div>
         <div class="modal-footer">
             <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
-            <button class="btn btn-primary">Добавить</button>
+            <button id="newDim" class="btn btn-primary">Добавить</button>
         </div>
     </div>
 
@@ -39,3 +48,29 @@
         }
         }
     </select>
+
+<script>
+    $("#newDim").click(function () {
+        var str = $("#newDimName").val();
+        str = $.trim(str);
+        if (!str || !$("#newDimSel option:selected").val() || !$.trim($("#newDimBaseName").val())) {
+            $("#newDimError").show();
+            $("#newDimName").focus();
+        } else {
+            $("#form0").submit();
+            $("#newDimName").val() = "";
+        }
+    });
+
+    $("#SelDim").change(function () {
+        if ($("#SelDim").children().length == 0) {
+            $("#delDim").addClass("disabled");
+            $("#addMeas").addClass("disabled");
+        }
+        else {
+            $("#newMeasDimName").val($("#SelDim option:selected").val());
+            $("#addMeas").removeClass("disabled");
+            $("#delDim").removeClass("disabled");
+        }
+    });
+</script>

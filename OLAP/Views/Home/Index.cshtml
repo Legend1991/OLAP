@@ -15,8 +15,12 @@
 <div id="sideBar">
 	<div style="margin-top: 0px;"><h5>База данных</h5></div>
 	<select id="DBSel">
-  		<option>Test DB</option>
-  		<option>MusicStrore DB</option>
+        @if (ViewData["dataBases"] != null){
+        foreach (var db in (List<OLAP.Models.DataBase>)ViewData["dataBases"])
+        {
+            <option>@db.Name</option>
+        }
+        }
 	</select>
 
 	<div id="Dims">

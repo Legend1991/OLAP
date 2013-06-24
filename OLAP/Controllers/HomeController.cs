@@ -15,6 +15,7 @@ namespace OLAP.Controllers
 
         public ActionResult Index()
         {
+            ViewData["dataBases"] = olapDB.DataBases.ToList();
             return View();
         }
 
@@ -24,16 +25,19 @@ namespace OLAP.Controllers
             return View();
         }
 
+        [AllowAnonymous]
+        [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ShowDimensions(string baseName)
         {
-            ViewData["dimensions"] = olapDB.Dimensions.Select(d => d.DataBase.Name == baseName).ToList();
-            return PartialView("ShowDimensions");
+            var dims = SelectDimensions(olapDB.Dimensions.ToList(), baseName);
+            return Json(dims);
         }
 
+        [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ShowMeasures(string dimName)
         {
-            ViewData["measuresList"] = olapDB.Measures.Select(m => m.Dimension.Name == dimName).ToList();
-            return PartialView("ShowMeasures");
+            ViewData["measuresList"] = SelectMeasures(olapDB.Measures.ToList(), dimName);
+            return Json("Manage");
         }
 
         [HttpPost]
@@ -88,9 +92,9 @@ namespace OLAP.Controllers
             };
 
             olapDB.Dimensions.Add(dim);
-            olapDB.SaveChanges();
-            ViewData["dimensions"] = olapDB.Dimensions.Select(d => d.DataBase.Name == baseName).ToList();
-            return PartialView("ShowDimensions");
+            //olapDB.SaveChanges();
+            ViewData["dimensions"] = SelectDimensions(olapDB.Dimensions.ToList(), baseName);
+            return PartialView("Manage");
         }
 
         [HttpGet]
@@ -99,7 +103,7 @@ namespace OLAP.Controllers
             Dimension dim = olapDB.Dimensions.Single(d => d.Name == name);
             olapDB.Dimensions.Remove(dim);
             olapDB.SaveChanges();
-            return PartialView("ShowDimensions");
+            return PartialView("Manage");
         }
 
         [HttpPost]
@@ -117,8 +121,8 @@ namespace OLAP.Controllers
 
             olapDB.Measures.Add(meas);
             olapDB.SaveChanges();
-            ViewData["measuresList"] = olapDB.Measures.Select(m => m.Dimension.Name == dimName).ToList();
-            return PartialView("ShowMeasures");
+            ViewData["measuresList"] = SelectMeasures(olapDB.Measures.ToList(), dimName);
+            return PartialView("Manage");
         }
 
         [HttpGet]
@@ -127,7 +131,37 @@ namespace OLAP.Controllers
             Measure meas= olapDB.Measures.Single(m => m.Name == name);
             olapDB.Measures.Remove(meas);
             olapDB.SaveChanges();
-            return PartialView("ShowMeasures");
+            return PartialView("Manage");
+        }
+
+        private List<DimensionJson> SelectDimensions(List<Dimension> dims, string baseName)
+        {
+            List<DimensionJson> result = new List<DimensionJson>();
+            foreach (Dimension d in dims)
+            {
+                if (d.DataBase.Name == baseName)
+                {
+                    result.Add(new DimensionJson
+                    {
+                        Name = d.Name,
+                        TableName = d.TableName
+                    });
+                }
+            }
+            return result;
+        }
+
+        private List<Measure> SelectMeasures(List<Measure> meas, string dimName)
+        {
+            List<Measure> result = new List<Measure>();
+            foreach (Measure m in meas)
+            {
+                if (m.Dimension.Name == dimName)
+                {
+                    result.Add(m);
+                }
+            }
+            return result;
         }
     }
 }

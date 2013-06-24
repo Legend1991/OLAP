@@ -2,6 +2,7 @@
     ViewBag.Title = "Manage";
     Layout = "~/Views/Shared/_Layout.cshtml";
     @Scripts.Render("~/Scripts/bootstrap.file-input.js")
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.js")
 }
 
 <div id="left">
@@ -25,7 +26,7 @@
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <strong>Ошибка!</strong> Все поля должны быть заполнены.
             </div>
-            @using (Html.BeginForm("AddDataBase", "Home", FormMethod.Post, new { enctype = "multipart/form-data", id = "AddWallForm" }))
+            @using (Html.BeginForm("AddDataBase", "Home", FormMethod.Post, new { enctype = "multipart/form-data", id = "loadDBForm" }))
             {
                 <label>Введите имя</label>
                 <input type="text" placeholder="Введите текст…" name="name" id="dataBaseName">
@@ -42,9 +43,11 @@
     </div>
 
     <select id="SelDB" size="2" class="selectData">
-        @foreach (var db in (List<OLAP.Models.DataBase>)ViewData["dataBases"])
+        @if (ViewData["dataBases"] != null){
+        foreach (var db in (List<OLAP.Models.DataBase>)ViewData["dataBases"])
         {
             <option>@db.Name</option>
+        }
         }
     </select>
 </div>
@@ -67,7 +70,7 @@
             $("#loadDBError").show();
             $("#dataBaseName").focus();
         } else {
-            document.forms[0].submit();
+            $("#loadDBForm").submit();
             $("#dataBaseName").val() = "";
         }
     });
@@ -76,27 +79,13 @@
         //$("#SelDB option:selected").val();
         if ($("#SelDB").children().length == 0) {
             $("#delDB").addClass("disabled");
+            $("#addDim").addClass("disabled");
+            $("#addMeas").addClass("disabled");
         }
         else {
+            $("#newDimBaseName").val($("#SelDB option:selected").val());
             $("#delDB").removeClass("disabled");
-        }
-    });
-
-    $("#SelDim").change(function () {
-        if ($("#SelDim").children().length == 0) {
-            $("#delDim").addClass("disabled");
-        }
-        else {
-            $("#delDim").removeClass("disabled");
-        }
-    });
-
-    $("#SelMeas").change(function () {
-        if ($("#SelMeas").children().length == 0) {
-            $("#delMeas").addClass("disabled");
-        }
-        else {
-            $("#delMeas").removeClass("disabled");
+            $("#addDim").removeClass("disabled");
         }
     });
 
@@ -109,5 +98,24 @@
             $("#SelDim").children().remove();
             $("#SelMeas").children().remove();
         }
+    });
+
+    function setDimensions(data) {
+        $("#SelDim").children().remove();
+        var dims = JSON.parse(data.responseText);
+        for (var dim in dims) {
+            $("#SelDim").append("<option>" + dims[dim].Name + "</option>");
+        }
+    }
+
+    $("#SelDB option").click(function () {
+        $.ajax({
+            type: "POST",
+            dataType: 'jsonp',
+            url: "/Home/ShowDimensions",
+            data: { baseName: $("#SelDB option:selected").val() },
+            success: setDimensions,
+            error: setDimensions
+        });
     });
 </script>
