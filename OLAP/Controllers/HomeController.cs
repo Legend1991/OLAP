@@ -253,6 +253,36 @@ namespace OLAP.Controllers
             return PartialView("Manage");
         }
 
+        [HttpPost]
+        public ActionResult AddFact(string name, string tableName, string rowName, string baseName)
+        {
+            name = name.Trim();
+            DataBase db = olapDB.DataBases.Single(b => b.Name == baseName);
+            Fact fact = new Fact
+            {
+                DataBaseId = db.Id,
+                TableName = tableName,
+                RowName = rowName,
+                Name = name,
+            };
+
+            olapDB.Facts.Add(fact);
+            olapDB.SaveChanges();
+            ViewData["dataBases"] = olapDB.DataBases.ToList();
+            ViewData["dimensions"] = SelectDimensions(olapDB.Dimensions.ToList(), baseName);
+            ViewData["factsList"] = SelectFacts(olapDB.Facts.ToList(), baseName);
+            return PartialView("Manage");
+        }
+
+        [HttpGet]
+        public ActionResult DeleteFact(string name)
+        {
+            Fact fact = olapDB.Facts.Single(f => f.Name == name);
+            olapDB.Facts.Remove(fact);
+            olapDB.SaveChanges();
+            return PartialView("Manage");
+        }
+
         private List<DimensionJson> SelectDimensions(List<Dimension> dims, string baseName)
         {
             List<DimensionJson> result = new List<DimensionJson>();

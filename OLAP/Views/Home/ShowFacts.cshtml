@@ -40,7 +40,7 @@
      <select id="SelFact" size="2" class="selectData SelFact">
         @if (ViewData["factsList"] != null)
         {
-            foreach (var meas in (List<OLAP.Models.MeasureJson>)ViewData["factsList"])
+            foreach (var meas in (List<OLAP.Models.FactJson>)ViewData["factsList"])
             {
                 <option>@meas.Name</option>
             }
@@ -70,5 +70,38 @@
             success: setFactsRows,
             error: setFactsRows
         });
+    });
+
+    $("#newFact").click(function () {
+        var str = $("#newFactName").val();
+        str = $.trim(str);
+        if (!str || !$("#newFactSelTable option:selected").val()
+            || !$("#newFactSelRow option:selected").val()
+            || !$.trim($("#newDimBaseName").val())) {
+            $("#newFactError").show();
+            $("#newFactName").focus();
+        } else {
+            $("#newFactForm").submit();
+            $("#newFactName").val() = "";
+        }
+    });
+
+    $("#delFact").click(function () {
+        $.get("@Url.Action("DeleteFact", "Home")", { name: $("#SelFact option:selected").val() });
+        $("#SelFact option:selected").remove();
+
+        if ($("#SelFact option:selected") != null) {
+            $("#delFact").addClass("disabled");
+        }
+    });
+
+    $("#SelFact").change(function () {
+        //$("#SelDB option:selected").val();
+        if ($("#SelFact").children().length == 0) {
+            $("#delFact").addClass("disabled");
+        }
+        else {
+            $("#delFact").removeClass("disabled");
+        }
     });
 </script>
