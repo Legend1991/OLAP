@@ -8,7 +8,7 @@
 <div id="left">
         <div class="navbar">
         <div class="navbar-inner">
-            <span class="brand">Источники данных</span>
+            <span id="DBSelLabel">Базы данных</span>
             <div class="columnButtons">
                 <a href="#addNewDB" role="button" class="btn btn-success" data-toggle="modal">Загрузить...</a>
                 <a href="#" id="delDB" role="button" class="btn btn-danger disabled">Удалить</a>
@@ -52,12 +52,16 @@
     </select>
 </div>
 
-<div id="right">
-    @Html.Partial("ShowMeasures");
-</div>
+    <div id="right1">
+    @Html.Partial("ShowMeasures")
+    </div>
+
+    <div id="right2">
+        @Html.Partial("ShowFacts")
+    </div>
 
 <div id="center">
-    @Html.Partial("ShowDimensions");
+    @Html.Partial("ShowDimensions")
 </div>
 
 <script>

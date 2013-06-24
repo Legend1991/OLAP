@@ -121,11 +121,14 @@ canvas {
 
 #left {
     position: absolute;
-    min-height: 500px;
+    min-height: 485px;
+    max-height: 485px;
     left: 15px;
     top: 77px;
     bottom: 15px;
-    width: 32%;
+    /*width: 23%;*/
+    min-width: 322px;
+    z-index: 2001;
     /*background-color: rgb(204,204,204)*/
 }
 
@@ -133,20 +136,54 @@ canvas {
     position: absolute;
     top: 77px;
     bottom: 15px;
-    width: 32%;
-    left: 34%;
-    right: 34%;
-    min-height: 500px;
+    /*width: 32%;*/
+    left: 352px;
+    right: 677px;
+    min-height: 485px;
+    max-height: 485px;
+    min-width: 322px;
+    max-width: 322px;
+    z-index: 2002;
     /*background-color: rgb(204,204,204)*/
 }
 
-#right {
+/*#right {
     position: absolute;
-    min-height: 500px;
-    width: 32%;
+    min-height: 485px;
+    max-height: 485px;
+    /*width: 23%;
     right: 15px;
     top: 77px;
     bottom: 15px;
+    min-width: 667px;
+    /*background-color: rgb(204,204,204)
+}*/
+
+#right1 {
+     display: block;
+    position: absolute;
+    min-height: 485px;
+    max-height: 485px;
+    left: 689px;
+    right: 352px;
+    top: 77px;
+    bottom: 15px;
+    min-width: 322px;
+    max-width: 322px;
+    z-index: 2003
+    /*background-color: rgb(204,204,204)*/
+}
+
+#right2 {
+    position: absolute;
+    min-height: 485px;
+    max-height: 485px;
+    min-width: 322px;
+    /*width: 23%;*/
+    right: 15px;
+    top: 77px;
+    bottom: 15px;
+    z-index: 2004;
     /*background-color: rgb(204,204,204)*/
 }
 
@@ -163,4 +200,28 @@ canvas {
 
 .columnButtons {
     float: right;
+}
+
+#DBSelLabel {
+    margin-left: -15px;
+    margin-top: 10px;
+    position: absolute;
+}
+
+#DimSelLabel {
+    margin-left: -15px;
+    margin-top: 10px;
+    position: absolute;
+}
+
+#FactSelLabel {
+    margin-left: -15px;
+    margin-top: 10px;
+    position: absolute;
+}
+
+#MeasSelLabel {
+    margin-left: -15px;
+    margin-top: 10px;
+    position: absolute;
 }
