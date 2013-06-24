@@ -1,4 +1,5 @@
 var markers = Array();
+var blockIsMove = false;
 
 function attachMarkerToCube(measureName, currCube, dim) {
 	//	look up the name to mesh
@@ -88,7 +89,6 @@ function attachMarkerToCube(measureName, currCube, dim) {
 			return;
 	    }
 	    shift(this.dim, this.shiftGroup);
-		blockIsMove = !blockIsMove;
 	};
 
 	marker.addEventListener('click', markerSelect, true);

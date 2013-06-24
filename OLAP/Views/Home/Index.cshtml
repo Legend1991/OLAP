@@ -57,7 +57,7 @@
             <div><span id="measX">Город:</span></div>
             <div><span id="measY">Год:</span></div>
             <div><span id="measZ">Категория:</span></div>
-            <div><span id="fact">Доход:</span></div>
+            <div><h5 id="fact">Доход:</h5></div>
         </div>
   		<ul id="contextMenu" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
     	    <li><a tabindex="-1" href="#">Действие</a></li>
@@ -84,7 +84,7 @@
 			var mouse = new THREE.Vector2(), INTERSECTED, ROLLOVERED;
 			var radius = 100;
 			var renderer;
-			var blockIsMove = false;
+			//var blockIsMove = false;
 			var shiftGroup;
 			var face;
 			var currX;
@@ -247,7 +247,8 @@
 			}
 
 			function shift(dim, shiftGroup) {
-			    var moveDist = 7;
+			    blockIsMove = !blockIsMove;
+			    var moveDist = -7;
 			    if (blockIsMove == true) {
 			        moveDist = -moveDist;
 			    }
