@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using System.IO;
 using System.Text;
 using OLAP.Models;
+using System.Data.SqlServerCe;
+using System.Data;
 
 namespace OLAP.Controllers
 {
@@ -29,10 +31,37 @@ namespace OLAP.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ShowDimensions(string baseName)
         {
-            var d = olapDB.Dimensions.ToList();
             var dims = SelectDimensions(olapDB.Dimensions.ToList(), baseName);
-            dims.Add(new DimensionJson { Name = "", TableName = "1" });
-            dims.Add(new DimensionJson { Name = "", TableName = "2" });
+
+            DataBase db = olapDB.DataBases.Single(d => d.Name == baseName);
+            SqlCeConnection myConnection = new SqlCeConnection();
+            DataSet ds;
+            String selTablesSQL = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES";
+            string dataSource = Path.Combine(Server.MapPath("~/Files"), db.FileName);
+            myConnection.ConnectionString = @"Data Source="+dataSource+";Persist Security Info=False;";
+            myConnection.Open();
+            using (SqlCeCommand comm = new SqlCeCommand(selTablesSQL, myConnection))
+            {
+                using (SqlCeDataAdapter da = new SqlCeDataAdapter(comm))
+                {
+                    ds = new DataSet();
+
+                    try
+                    {
+                        da.Fill(ds);
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                    finally
+                    {
+                        myConnection.Close();
+                    }
+                }
+            }
+
+            addTabels(dims, ds);
+
             return Json(dims);
         }
 
@@ -41,8 +70,36 @@ namespace OLAP.Controllers
         public ActionResult ShowMeasures(string dimName)
         {
             var meas = SelectMeasures(olapDB.Measures.ToList(), dimName);
-            meas.Add(new MeasureJson { Name = "", ColumnName = "3" });
-            meas.Add(new MeasureJson { Name = "", ColumnName = "4" });
+
+            Dimension dim = olapDB.Dimensions.Single(d => d.Name == dimName);
+            SqlCeConnection myConnection = new SqlCeConnection();
+            DataSet ds;
+            String selColumnsSQL = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='"  +dim.TableName + "'";
+            string dataSource = Path.Combine(Server.MapPath("~/Files"), dim.DataBase.FileName);
+            myConnection.ConnectionString = @"Data Source=" + dataSource + ";Persist Security Info=False;";
+            myConnection.Open();
+            using (SqlCeCommand comm = new SqlCeCommand(selColumnsSQL, myConnection))
+            {
+                using (SqlCeDataAdapter da = new SqlCeDataAdapter(comm))
+                {
+                    ds = new DataSet();
+
+                    try
+                    {
+                        da.Fill(ds);
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                    finally
+                    {
+                        myConnection.Close();
+                    }
+                }
+            }
+
+            addRows(meas, ds);
+
             return Json(meas);
         }
 
@@ -118,12 +175,17 @@ namespace OLAP.Controllers
         {
             name = name.Trim();
             Dimension dim = olapDB.Dimensions.Single(d => d.Name == dimName);
+            int priority = 0;
+            if (olapDB.Measures.ToList().Count != 0)
+            {
+                priority = olapDB.Measures.ToList().Last().Priority + 1;
+            }
             Measure meas = new Measure
             {
                 DimensionId = dim.Id,
                 ColumnName = columnName,
                 Name = name,
-                Priority = olapDB.Measures.ToList().Last().Priority + 1,
+                Priority = priority
             };
 
             olapDB.Measures.Add(meas);
@@ -176,6 +238,22 @@ namespace OLAP.Controllers
                 }
             }
             return result;
+        }
+
+        private void addTabels(List<DimensionJson> dims, DataSet ds)
+        {
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                dims.Add(new DimensionJson { Name = "", TableName = (string)row[0] });
+            }
+        }
+
+        private void addRows(List<MeasureJson> meas, DataSet ds)
+        {
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                meas.Add(new MeasureJson { Name = "", ColumnName = (string)row[0] });
+            }
         }
     }
 }
