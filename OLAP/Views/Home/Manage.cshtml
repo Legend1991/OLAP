@@ -102,13 +102,23 @@
 
     function setDimensions(data) {
         $("#SelDim").children().remove();
+        $("#newDimSel").children().remove();
         var dims = JSON.parse(data.responseText);
         for (var dim in dims) {
-            $("#SelDim").append("<option>" + dims[dim].Name + "</option>");
+            if (dims[dim].Name !== "") {
+                $("#SelDim").append("<option>" + dims[dim].Name + "</option>");
+            } else if (dims[dim].TableName !== "") {
+                $("#newDimSel").append("<option>" + dims[dim].TableName + "</option>");
+            }
         }
     }
 
     $("#SelDB option").click(function () {
+        $("#addMeas").addClass("disabled");
+        $("#SelMeas").children().remove();
+        if ($("#SelDim").children().length == 0) {
+            $("#delDim").addClass("disabled");
+        }
         $.ajax({
             type: "POST",
             dataType: 'jsonp',

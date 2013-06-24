@@ -29,15 +29,21 @@ namespace OLAP.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ShowDimensions(string baseName)
         {
+            var d = olapDB.Dimensions.ToList();
             var dims = SelectDimensions(olapDB.Dimensions.ToList(), baseName);
+            dims.Add(new DimensionJson { Name = "", TableName = "1" });
+            dims.Add(new DimensionJson { Name = "", TableName = "2" });
             return Json(dims);
         }
 
+        [AllowAnonymous]
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ShowMeasures(string dimName)
         {
-            ViewData["measuresList"] = SelectMeasures(olapDB.Measures.ToList(), dimName);
-            return Json("Manage");
+            var meas = SelectMeasures(olapDB.Measures.ToList(), dimName);
+            meas.Add(new MeasureJson { Name = "", ColumnName = "3" });
+            meas.Add(new MeasureJson { Name = "", ColumnName = "4" });
+            return Json(meas);
         }
 
         [HttpPost]
@@ -113,7 +119,7 @@ namespace OLAP.Controllers
             Dimension dim = olapDB.Dimensions.Single(d => d.Name == dimName);
             Measure meas = new Measure
             {
-                DimensionsId = dim.Id,
+                DimensionId = dim.Id,
                 ColumnName = columnName,
                 Name = name,
                 Priority = olapDB.Measures.ToList().Last().Priority + 1,
@@ -144,21 +150,26 @@ namespace OLAP.Controllers
                     result.Add(new DimensionJson
                     {
                         Name = d.Name,
-                        TableName = d.TableName
+                        TableName = ""
                     });
                 }
             }
             return result;
         }
 
-        private List<Measure> SelectMeasures(List<Measure> meas, string dimName)
+        private List<MeasureJson> SelectMeasures(List<Measure> meas, string dimName)
         {
-            List<Measure> result = new List<Measure>();
+            List<MeasureJson> result = new List<MeasureJson>();
+            //Dimension dim = olapDB.Dimensions.Single(d => d.Name == dimName);
             foreach (Measure m in meas)
             {
                 if (m.Dimension.Name == dimName)
                 {
-                    result.Add(m);
+                    result.Add(new MeasureJson
+                    {
+                        Name = m.Name,
+                        ColumnName = ""
+                    });
                 }
             }
             return result;

@@ -138,6 +138,7 @@
     <Compile Include="Models\Dimension.cs" />
     <Compile Include="Models\DimensionJson.cs" />
     <Compile Include="Models\Measure.cs" />
+    <Compile Include="Models\MeasureJson.cs" />
     <Compile Include="Models\OLAPEntities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

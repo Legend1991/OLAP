@@ -25,7 +25,6 @@
             <input type="text" id="newDimName" placeholder="Введите текст…" name="name">
             <label>Выберите таблицу</label>
             <select id="newDimSel"  class="SelDim" name="tableName">
-                <option>dsfasdf</option>
              </select>
             }
         </div>
@@ -72,5 +71,32 @@
             $("#addMeas").removeClass("disabled");
             $("#delDim").removeClass("disabled");
         }
+    });
+
+    function setMeasures(data) {
+        $("#SelMeas").children().remove();
+        $("#newMeasSel").children().remove();
+        var meas = JSON.parse(data.responseText);
+        for (var m in meas) {
+            if (meas[m].Name !== "") {
+                $("#SelMeas").append("<option>" + meas[m].Name + "</option>");
+            } else if (meas[m].ColumnName !== "") {
+                $("#newMeasSel").append("<option>" + meas[m].ColumnName + "</option>");
+            }
+        }
+    }
+
+    $("#SelDim").click(function () {
+        if ($("#SelMeas").children().length == 0) {
+            $("#delMeas").addClass("disabled");
+        }
+        $.ajax({
+            type: "POST",
+            dataType: 'jsonp',
+            url: "/Home/ShowMeasures",
+            data: { dimName: $("#SelDim option:selected").val() },
+            success: setMeasures,
+            error: setMeasures
+        });
     });
 </script>

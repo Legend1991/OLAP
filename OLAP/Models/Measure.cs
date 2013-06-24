@@ -12,7 +12,7 @@ namespace OLAP.Models
     {
         [Key]
         public int Id { get; set; }
-        public int DimensionsId { get; set; }
+        public int DimensionId { get; set; }
         public string ColumnName { get; set; }
         public string Name { get; set; }
         public int Priority { get; set; }
