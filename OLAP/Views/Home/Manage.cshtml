@@ -16,7 +16,7 @@
         </div>
     </div>
  
-    <div class="modal hide" id="addNewDB" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal hide" id="addNewDB" tabindex="-1" style="z-index: 5001" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h3 id="myModalLabel">Загрузить источник данных</h3>
@@ -108,12 +108,14 @@
     function setDimensions(data) {
         $("#SelDim").children().remove();
         $("#newDimSel").children().remove();
+        $("#newFactSelTable").children().remove();
         var dims = JSON.parse(data.responseText);
         for (var dim in dims) {
             if (dims[dim].Name !== "") {
                 $("#SelDim").append("<option>" + dims[dim].Name + "</option>");
             } else if (dims[dim].TableName !== "") {
                 $("#newDimSel").append("<option>" + dims[dim].TableName + "</option>");
+                $("#newFactSelTable").append("<option>" + dims[dim].TableName + "</option>");
             }
         }
     }
@@ -123,6 +125,9 @@
         $("#SelMeas").children().remove();
         if ($("#SelDim").children().length == 0) {
             $("#delDim").addClass("disabled");
+        }
+        if ($("#SelFact").children().length == 0) {
+            $("#delFact").addClass("disabled");
         }
         $.ajax({
             type: "POST",

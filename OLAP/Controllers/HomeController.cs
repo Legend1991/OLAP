@@ -103,6 +103,15 @@ namespace OLAP.Controllers
             return Json(meas);
         }
 
+        [AllowAnonymous]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult ShowFacts(string baseName)
+        {
+            var dims = SelectFacts(olapDB.Facts.ToList(), baseName);
+
+            return Json(dims);
+        }
+
         [HttpPost]
         public ActionResult AddDataBase(HttpPostedFileBase filePath, string name)
         {
@@ -234,6 +243,24 @@ namespace OLAP.Controllers
                     {
                         Name = m.Name,
                         ColumnName = ""
+                    });
+                }
+            }
+            return result;
+        }
+
+        private List<FactJson> SelectFacts(List<Fact> fact, string baseName)
+        {
+            List<FactJson> result = new List<FactJson>();
+            foreach (Fact f in fact)
+            {
+                if (f.DataBase.Name == baseName)
+                {
+                    result.Add(new FactJson
+                    {
+                        Name = f.Name,
+                        RowName = "",
+                        TableName = ""
                     });
                 }
             }

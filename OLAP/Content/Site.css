@@ -128,7 +128,6 @@ canvas {
     bottom: 15px;
     /*width: 23%;*/
     min-width: 322px;
-    z-index: 2001;
     /*background-color: rgb(204,204,204)*/
 }
 
@@ -143,7 +142,6 @@ canvas {
     max-height: 485px;
     min-width: 322px;
     max-width: 322px;
-    z-index: 2002;
     /*background-color: rgb(204,204,204)*/
 }
 
@@ -170,7 +168,6 @@ canvas {
     bottom: 15px;
     min-width: 322px;
     max-width: 322px;
-    z-index: 2003
     /*background-color: rgb(204,204,204)*/
 }
 
@@ -183,7 +180,6 @@ canvas {
     right: 15px;
     top: 77px;
     bottom: 15px;
-    z-index: 2004;
     /*background-color: rgb(204,204,204)*/
 }
 

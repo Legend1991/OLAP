@@ -1,0 +1,48 @@
+﻿    <div class="navbar">
+        <div class="navbar-inner">
+            <span id="FactSelLabel">Факты</span>
+            <div class="columnButtons">
+                <a href="#addNewFact" id="addFact" role="button" class="btn btn-success disabled" data-toggle="modal">Добавить...</a>
+                <a href="#" id="delFact" role="button" class="btn btn-danger disabled">Удалить</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal hide" id="addNewFact" tabindex="-1" style="z-index: 5003" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Добавить меру</h3>
+        </div>
+        <div class="modal-body">
+            <div id="newFactError" class="alert alert-error hide">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Ошибка!</strong> Все поля должны быть заполнены.
+            </div>
+            @using (Html.BeginForm("AddFact", "Home", FormMethod.Post, new { enctype = "multipart/form-data", id = "newFactForm" }))
+            {
+            <input type="text" id="newFactBaseName"  style="position: absolute; visibility: hidden" name="baseName" />
+            <label>Введите название</label>
+            <input type="text" id="newFactName" placeholder="Введите текст…" name="name">
+            <label>Выберите таблицу</label>
+            <select id="newFactSelTable" class="SelFact" name="tableName">
+             </select>
+                <label>Выберите поле</label>
+            <select id="newFactSelRow" class="SelFact" name="rowName">
+             </select>
+            }
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Отмена</button>
+            <button id="newFact" class="btn btn-primary">Добавить</button>
+        </div>
+    </div>
+
+     <select id="FactMeas" size="2" class="selectData SelFact">
+        @if (ViewData["factsList"] != null)
+        {
+            foreach (var meas in (List<OLAP.Models.MeasureJson>)ViewData["factsList"])
+            {
+                <option>@meas.Name</option>
+            }
+        }
+    </select>

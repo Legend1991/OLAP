@@ -11,5 +11,6 @@ namespace OLAP.Models
         public DbSet<DataBase> DataBases { get; set; }
         public DbSet<Dimension> Dimensions { get; set; }
         public DbSet<Measure> Measures { get; set; }
+        public DbSet<Fact> Facts { get; set; }
     }
 }

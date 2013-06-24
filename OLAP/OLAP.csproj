@@ -138,6 +138,8 @@
     <Compile Include="Models\DataBaseJson.cs" />
     <Compile Include="Models\Dimension.cs" />
     <Compile Include="Models\DimensionJson.cs" />
+    <Compile Include="Models\Fact.cs" />
+    <Compile Include="Models\FactJson.cs" />
     <Compile Include="Models\Measure.cs" />
     <Compile Include="Models\MeasureJson.cs" />
     <Compile Include="Models\OLAPEntities.cs" />
@@ -298,6 +300,7 @@
   <ItemGroup>
     <Content Include="Views\Home\ShowDimensions.cshtml" />
     <Content Include="Views\Home\ShowMeasures.cshtml" />
+    <Content Include="Views\Home\ShowFacts.cshtml" />
     <None Include="Web.FileUpload.config" />
     <None Include="Web.FileUpload.xsd">
       <SubType>Designer</SubType>

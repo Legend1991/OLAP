@@ -1,6 +1,6 @@
 ﻿    <div class="navbar">
         <div class="navbar-inner">
-            <span class="brand">Меры</span>
+            <span id="MeasSelLabel">Меры</span>
             <div class="columnButtons">
                 <a href="#addNewMeasure" id="addMeas" role="button" class="btn btn-success disabled" data-toggle="modal">Добавить...</a>
                 <a href="#" id="delMeas" role="button" class="btn btn-danger disabled">Удалить</a>
@@ -8,7 +8,7 @@
         </div>
     </div>
 
-    <div class="modal hide" id="addNewMeasure" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal hide" id="addNewMeasure" tabindex="-1" role="dialog" style="z-index: 5004" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h3 id="myModalLabel">Добавить меру</h3>
