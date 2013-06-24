@@ -54,17 +54,20 @@
 <div id="visualizationBorder">
     <div  id="visualization">
         <div id="info">
-            <div><span id="measX">Город:</span></div>
-            <div><span id="measY">Год:</span></div>
-            <div><span id="measZ">Категория:</span></div>
-            <div><h5 id="fact">Доход:</h5></div>
+            <div><span id="measX"></span></div>
+            <div><span id="measY"></span></div>
+            <div><span id="measZ"></span></div>
+            <div><h5 id="fact"></h5></div>
         </div>
   		<ul id="contextMenu" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-    	    <li><a tabindex="-1" href="#">Действие</a></li>
-    		<li><a tabindex="-1" href="#">Другое действие</a></li>
-    		<li><a tabindex="-1" href="#">Еще ссылка</a></li>
-    		<li class="divider"></li>
-    		<li><a tabindex="-1" href="#">Доп. ссылка</a></li>
+    	    <li class="dropdown-submenu">
+                <a tabindex="-1" href="#">Детализация</a>
+                <ul class="dropdown-menu">
+                    <li><a tabindex="-1" href="#" id="timeDit">Время</a></li>
+                    <li><a tabindex="-1" href="#" id="locDit">Расположение</a></li>
+                    <li><a tabindex="-1" href="#">Категория</a></li>
+                </ul>
+    	    </li>
   		</ul>
 	</div>
 </div>
@@ -93,7 +96,9 @@
 			var currXLabel;
 			var currYLabel;
 			var currZLabel;
-            var currFact
+			var currFact
+			var sceneObjects = new Array();
+			var dropdown = false;
 
 			renderer = new THREE.WebGLRenderer({ preserveDrawingBuffer: true, antialias: true });
 			renderer.setSize(WIDTH, HEIGHT);
@@ -133,6 +138,7 @@
 			                var geometry = new THREE.CubeGeometry(1, 1, 1);
 			                var material = new THREE.MeshLambertMaterial({ wireframe: false, color: 0x00ff00 });
 			                var cube = new THREE.Mesh(geometry, material);
+			                sceneObjects.push(cube);
 			                cube.position.x = xi;
 			                cube.position.y = yi;
 			                cube.position.z = zi;
@@ -143,6 +149,7 @@
 			                scene.add(cube);
 			                var cubeMesh = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 1), new THREE.MeshLambertMaterial({ wireframe: true, color: 0x000000 }));
 			                THREE.SceneUtils.attach(cubeMesh, scene, cube);
+			                sceneObjects.push(cubeMesh);
 
 			                createMarkers(cube, countX, countY, countZ, labelsX, labelsY, labelsZ);
 			            }
@@ -167,12 +174,15 @@
 
 /////////////////// Clear scene
 			function clearScene() {
-			    for (var i = scene.children.length - 1; i >= 0 ; i--) {
-			        var obj = scene.children[i];
-			        if (obj !== camera) {
-			            scene.remove(obj);
-			        }
+			    for (var i in sceneObjects) {		        
+			        scene.remove(sceneObjects[i]);
 			    }
+			    sceneObjects = new Array();
+			    for (var i in markers) {
+			        var marker = markers[i];
+			        marker.parentNode.removeChild(marker);
+			    }
+			    markers = new Array();
             }
 
 /////////////////// Lights
@@ -328,7 +338,6 @@
 
 			};
             
-			makeCube(x1, y1, z1, YearData, CountryData, Category, cube1);
 			render();
 
 
@@ -350,5 +359,37 @@
 			$("#DBSel option").click(function () {
 			    checkButton();
 			    $("#DBSel option:selected").val()
+			});
+
+			$("#createCube").click(function () {
+			    clearScene();
+			    makeCube(x1, y1, z1, YearData, CountryData, Category, cube1);
+			});
+
+			$("#visualization").click(function (event) {
+			    if (INTERSECTED != null) {
+			        if (dropdown == false) {
+			            dropdown = true;
+			            $("#contextMenu").css({ 'display': 'block', 'left': event.clientX - 250 + 'px', 'top': event.clientY - 77 + 'px', 'z-index': '100000' });
+			        }
+			    } else if (dropdown == true) {
+			        dropdown = false;
+			        $("#contextMenu").css({ 'display': 'none', 'left': event.clientX - 250 + 'px', 'top': event.clientY - 77 + 'px', 'z-index': '100000' });
+			    }
+			});
+
+			$("#timeDit").click(function (event) {
+			    dropdown = false;
+			    $("#contextMenu").css({ 'display': 'none', 'left': event.clientX - 250 + 'px', 'top': event.clientY - 77 + 'px', 'z-index': '100000' });
+			    $("#contextMenu").append("<li class='dropdown-submenu'><a tabindex='-1' href='#'>Консолидация</a><ul class='dropdown-menu'><li><a tabindex='-1' href='#'>Время</a></li></ul></li>");
+			    clearScene();
+			    makeCube(x2, y2, z2, QuarterData, CountryData, Category, cube2);
+			});
+
+			$("#locDit").click(function (event) {
+			    dropdown = false;
+			    $("#contextMenu").css({ 'display': 'none', 'left': event.clientX - 250 + 'px', 'top': event.clientY - 77 + 'px', 'z-index': '100000' });
+			    clearScene();
+			    makeCube(x3, y3, z3, QuarterData, UkaineData, Category, cube3);
 			});
 </script>
