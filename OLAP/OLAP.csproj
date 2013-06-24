@@ -135,6 +135,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\DataBase.cs" />
+    <Compile Include="Models\DataBaseJson.cs" />
     <Compile Include="Models\Dimension.cs" />
     <Compile Include="Models\DimensionJson.cs" />
     <Compile Include="Models\Measure.cs" />

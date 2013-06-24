@@ -41,10 +41,10 @@
     </div>*@
     <select id="SelDim" size="2" class="selectData SelDim">
         @if (ViewData["dimensions"] != null){
-        foreach (var dim in (List<OLAP.Models.Dimension>)ViewData["dimensions"])
-        {
-            <option>@dim.Name</option>
-        }
+            foreach (var dim in (List<OLAP.Models.DimensionJson>)ViewData["dimensions"])
+            {
+                <option>@dim.Name</option>
+            }
         }
     </select>
 
@@ -56,7 +56,7 @@
             $("#newDimError").show();
             $("#newDimName").focus();
         } else {
-            $("#form0").submit();
+            $("#newDimForm").submit();
             $("#newDimName").val() = "";
         }
     });
@@ -98,5 +98,15 @@
             success: setMeasures,
             error: setMeasures
         });
+    });
+
+    $("#delDim").click(function () {
+        $.get("@Url.Action("DeleteDimension", "Home")", { name: $("#SelDim option:selected").val() });
+        $("#SelDim option:selected").remove();
+
+        if ($("#SelDim option:selected") != null) {
+            $("#delDim").addClass("disabled");
+            $("#SelMeas").children().remove();
+        }
     });
 </script>

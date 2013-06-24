@@ -98,7 +98,8 @@ namespace OLAP.Controllers
             };
 
             olapDB.Dimensions.Add(dim);
-            //olapDB.SaveChanges();
+            olapDB.SaveChanges();
+            ViewData["dataBases"] = olapDB.DataBases.ToList();
             ViewData["dimensions"] = SelectDimensions(olapDB.Dimensions.ToList(), baseName);
             return PartialView("Manage");
         }
@@ -127,6 +128,7 @@ namespace OLAP.Controllers
 
             olapDB.Measures.Add(meas);
             olapDB.SaveChanges();
+            ViewData["dataBases"] = olapDB.DataBases.ToList();
             ViewData["measuresList"] = SelectMeasures(olapDB.Measures.ToList(), dimName);
             return PartialView("Manage");
         }
